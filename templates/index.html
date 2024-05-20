@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>심플 웹 게임</title>
+</head>
+<body>
+    <div class="tabs">
+        <button class="tab-button" data-tab="player">플레이어</button>
+        <button class="tab-button" data-tab="host">호스트</button>
+        <button class="tab-button" data-tab="results">결과</button>
+    </div>
+    <div class="container">
+        <div id="player" class="tab-content active">
+            <h2>플레이어 역할</h2>
+            <input type="text" id="playerName" placeholder="이름을 입력하세요">
+            <button id="getRole" class="btn">역할 확인</button>
+            <div id="roleInfo" class="info"></div>
+            <h3>게임 상태</h3>
+            <div id="playerGameStatus" class="info">진행 중인 게임이 없습니다.</div>
+        </div>
+        <div id="host" class="tab-content">
+            <h2>게임 호스트</h2>
+            <input type="password" id="hostPassword" placeholder="암호 입력">
+            <input type="text" id="players" placeholder="플레이어 이름 (쉼표로 구분)">
+            <h3>역할 수 설정</h3>
+            <div class="roles">
+                <label>멀린: <input type="number" id="merlinCount" min="0" value="1"></label>
+                <label>퍼시벌: <input type="number" id="percivalCount" min="0" value="1"></label>
+                <label>시민: <input type="number" id="citizenCount" min="0" value="1"></label>
+                <label>암살자: <input type="number" id="assassinCount" min="0" value="1"></label>
+                <label>미니언: <input type="number" id="minionCount" min="0" value="0"></label>
+                <label>모르가나: <input type="number" id="morganaCount" min="0" value="1"></label>
+                <label>모드레드: <input type="number" id="mordredCount" min="0" value="0"></label>
+                <label>오베론: <input type="number" id="oberonCount" min="0" value="0"></label>
+            </div>
+            <h3>승리 팀 선택</h3>
+            <label><input type="radio" name="winner" value="good" checked> 선팀 승리</label>
+            <label><input type="radio" name="winner" value="evil"> 악팀 승리</label>
+            <button id="startGame" class="btn">게임 시작</button>
+            <button id="resetGame" class="btn">게임 초기화</button>
+            <button id="showResults" class="btn">게임 종료</button>
+        </div>
+        <div id="results" class="tab-content">
+            <h2>게임 결과</h2>
+            <div id="resultsInfo" class="info">진행 중인 게임이 없습니다.</div>
+            <h3>이전 게임 기록</h3>
+            <ul id="previousGames" class="info"></ul>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
