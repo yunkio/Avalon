@@ -4,7 +4,7 @@ from datetime import datetime
 import random
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='gevent')
 
 players = []
 assigned_roles = {}

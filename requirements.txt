@@ -1,5 +1,5 @@
 Flask==2.0.1
 Flask-SocketIO==5.1.1
 flask-cors==3.0.10
-eventlet==0.30.2
+gevent==22.10.2
 werkzeug==2.0.3
