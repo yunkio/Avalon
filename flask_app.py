@@ -6,7 +6,7 @@ import random
 import pytz
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode='gevent', ping_timeout=600, ping_interval=100)
+socketio = SocketIO(app, async_mode='gevent', ping_timeout=3600, ping_interval=60)
 
 players = []
 assigned_roles = {}
