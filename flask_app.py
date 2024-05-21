@@ -25,6 +25,7 @@ def handle_set_game(data):
     assigned_roles = assign_roles(players, roles_count)
     game_start_time = datetime.now()
     emit('gameStarted', broadcast=True)
+    emit('updateGameStatus', {'players': players, 'game_start_time': game_start_time.isoformat()}, broadcast=True)
 
 @socketio.on('getRole')
 def handle_get_role(data):
@@ -49,6 +50,7 @@ def handle_reset_game():
     roles_count = {}
     game_start_time = None
     emit('gameReset', broadcast=True)
+    emit('updateGameStatus', {'players': [], 'game_start_time': None}, broadcast=True)
 
 @socketio.on('getResults')
 def handle_get_results(data):
