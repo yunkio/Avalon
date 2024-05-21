@@ -61,6 +61,11 @@ def handle_get_results(data):
         players = [{'name': player, 'role': role} for player, role in assigned_roles.items()]
         emit('resultsInfo', {'players': players, 'winner': data['winner']}, broadcast=True)
 
+@socketio.on('connect')
+def handle_connect():
+    global players, game_start_time
+    emit('updateGameStatus', {'players': players, 'game_start_time': game_start_time.isoformat() if game_start_time else None})
+
 def assign_roles(players, roles_count):
     roles = []
     for role, count in roles_count.items():
