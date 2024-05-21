@@ -104,7 +104,9 @@ socket.on('resultsInfo', (data) => {
 
     playersRoles.forEach(playerRole => {
         const playerRoleElement = document.createElement('div');
-        playerRoleElement.innerText = `${playerRole.name} : ${translateRole(playerRole.role)}`;
+        const role = playerRole.role;
+        playerRoleElement.innerText = `${playerRole.name} : ${translateRole(role)}`;
+        playerRoleElement.style.color = ['Merlin', 'Percival', 'Citizen'].includes(role) ? 'blue' : 'red';
         resultsElement.appendChild(playerRoleElement);
     });
 
