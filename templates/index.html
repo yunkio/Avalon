@@ -9,7 +9,7 @@
 <body>
     <div class="tabs">
         <button class="tab-button" data-tab="player">플레이어</button>
-        <button class="tab-button" data-tab="host">호스트</button>
+        <button class="tab-button" data-tab="host">윤기오</button>
         <button class="tab-button" data-tab="results">결과</button>
     </div>
     <div class="container">
@@ -27,6 +27,7 @@
             <input type="text" id="players" placeholder="플레이어 이름 (쉼표로 구분)">
             <h3>역할 수 설정</h3>
             <div class="roles">
+                <h4>선팀</h4>
                 <label>멀린: 
                     <select id="merlinCount">
                         <option value="0">0</option>
@@ -42,11 +43,18 @@
                 <label>시민: 
                     <select id="citizenCount">
                         <option value="0">0</option>
-                        <option value="1">1</option>
+                        <option value="1" selected>1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
-                        <option value="5" selected>5</option>
+                        <option value="5">5</option>
+                    </select>
+                </label>
+                <h4>악팀</h4>
+                <label>모르가나: 
+                    <select id="morganaCount">
+                        <option value="0">0</option>
+                        <option value="1" selected>1</option>
                     </select>
                 </label>
                 <label>암살자: 
@@ -57,30 +65,24 @@
                 </label>
                 <label>미니언: 
                     <select id="minionCount">
-                        <option value="0">0</option>
+                        <option value="0" selected>0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
-                        <option value="5" selected>5</option>
-                    </select>
-                </label>
-                <label>모르가나: 
-                    <select id="morganaCount">
-                        <option value="0">0</option>
-                        <option value="1" selected>1</option>
+                        <option value="5">5</option>
                     </select>
                 </label>
                 <label>모드레드: 
                     <select id="mordredCount">
-                        <option value="0">0</option>
-                        <option value="1" selected>1</option>
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
                     </select>
                 </label>
                 <label>오베론: 
                     <select id="oberonCount">
-                        <option value="0">0</option>
-                        <option value="1" selected>1</option>
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
                     </select>
                 </label>
             </div>

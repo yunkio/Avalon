@@ -88,6 +88,14 @@ body {
     justify-content: space-between;
 }
 
+.roles h4 {
+    width: 100%;
+    margin: 10px 0 0;
+    padding: 0;
+    font-size: 1.1em;
+    border-bottom: 1px solid #ddd;
+}
+
 .btn {
     width: calc(100% - 20px);
     padding: 10px;
