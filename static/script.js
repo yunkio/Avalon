@@ -182,7 +182,7 @@ function updateHostButtonState() {
 function startGameTimer() {
     clearInterval(gameInterval);
     gameInterval = setInterval(() => {
-        const gameStatusText = getGameStatusText([]);
+        const gameStatusText = getGameStatusText(players);
         document.getElementById('playerGameStatus').innerText = gameStatusText;
         document.getElementById('resultsGameStatus').innerText = gameStatusText;
     }, 1000);
