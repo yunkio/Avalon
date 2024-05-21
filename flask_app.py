@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from datetime import datetime
 import random
+import pytz
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='gevent')
@@ -24,7 +25,7 @@ def handle_set_game(data):
     players = data['players']
     roles_count = data['roles']
     assigned_roles = assign_roles(players, roles_count)
-    game_start_time = datetime.now()
+    game_start_time = datetime.now(pytz.timezone('Asia/Seoul'))
     role_check_history = []
     emit('gameStarted', broadcast=True)
     emit('updateGameStatus', {'players': players, 'game_start_time': game_start_time.isoformat()}, broadcast=True)
@@ -36,7 +37,7 @@ def handle_get_role(data):
     if player_name in assigned_roles:
         role = assigned_roles[player_name]
         info = get_role_info(role, assigned_roles, player_name)
-        timestamp = datetime.now().strftime('%H:%M:%S')
+        timestamp = datetime.now(pytz.timezone('Asia/Seoul')).strftime('%H:%M:%S')
         role_check_history.insert(0, f"[{timestamp}] {player_name}님이 역할을 확인하였습니다.")
         if len(role_check_history) > 10:
             role_check_history.pop()
