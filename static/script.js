@@ -120,7 +120,7 @@ socket.on('updateGameStatus', (data) => {
     gameStartTime = data.game_start_time ? new Date(data.game_start_time) : null;
     updateGameStatus(data.players);
     if (data.game_start_time) {
-        startGameTimer();
+        startGameTimer(data.players);
     }
 });
 
@@ -157,8 +157,8 @@ function getGameStatusText(players) {
     if (gameStartTime) {
         const now = new Date();
         const elapsed = new Date(now - gameStartTime);
-        const minutes = String(elapsed.getMinutes()).padStart(2, '0');
-        const seconds = String(elapsed.getSeconds()).padStart(2, '0');
+        const minutes = String(elapsed.getUTCMinutes()).padStart(2, '0');
+        const seconds = String(elapsed.getUTCSeconds()).padStart(2, '0');
         return `현재 ${minutes}분 ${seconds}초 동안 게임이 진행 중입니다.\n현재 플레이어: ${players.join(', ')}`;
     } else {
         return '진행 중인 게임이 없습니다.';
@@ -179,7 +179,7 @@ function updateHostButtonState() {
     }
 }
 
-function startGameTimer() {
+function startGameTimer(players) {
     clearInterval(gameInterval);
     gameInterval = setInterval(() => {
         const gameStatusText = getGameStatusText(players);
