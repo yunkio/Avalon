@@ -67,7 +67,8 @@ body {
 
 .tab-content input[type="text"],
 .tab-content input[type="password"],
-.tab-content input[type="number"] {
+.tab-content input[type="number"],
+.tab-content select {
     width: calc(100% - 20px);
     padding: 10px;
     margin: 10px 0;
@@ -77,7 +78,7 @@ body {
 
 .roles {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 10px;
 }
 

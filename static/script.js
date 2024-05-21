@@ -2,6 +2,7 @@ const socket = io();
 
 let gameStartTime = null;
 let previousGames = [];
+let gameInterval = null;
 
 document.getElementById('startGame').addEventListener('click', () => {
     const password = document.getElementById('hostPassword').value.trim();
@@ -23,6 +24,7 @@ document.getElementById('startGame').addEventListener('click', () => {
     };
     socket.emit('setGame', { players, roles });
     gameStartTime = new Date();
+    startGameTimer();
     document.getElementById('resultsInfo').innerText = '게임 진행 중...';
     document.getElementById('playerGameStatus').innerText = '게임 진행 중...';
     updateGameStatus(players);
@@ -37,6 +39,7 @@ document.getElementById('resetGame').addEventListener('click', () => {
     }
     socket.emit('resetGame');
     gameStartTime = null;
+    clearInterval(gameInterval);
     document.getElementById('resultsInfo').innerText = '진행 중인 게임이 없습니다.';
     document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
     updateGameStatus([]);
@@ -77,6 +80,7 @@ socket.on('roleInfo', (data) => {
 });
 
 socket.on('gameReset', () => {
+    clearInterval(gameInterval);
     document.getElementById('roleInfo').innerText = '';
     document.getElementById('players').value = '';
     document.getElementById('playerName').value = '';
@@ -86,6 +90,7 @@ socket.on('gameReset', () => {
 
 socket.on('resultsInfo', (data) => {
     if (Object.keys(data).length === 0) {
+        clearInterval(gameInterval);
         document.getElementById('resultsInfo').innerText = '진행 중인 게임이 없습니다.';
         document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
         document.getElementById('roleInfo').innerText = '게임이 종료되었습니다.';
@@ -105,6 +110,7 @@ socket.on('resultsInfo', (data) => {
 
     updatePreviousGames();
     gameStartTime = null;
+    clearInterval(gameInterval);
     document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
     document.getElementById('roleInfo').innerText = '게임이 종료되었습니다.';
     updateHostButtonState();
@@ -113,6 +119,7 @@ socket.on('resultsInfo', (data) => {
 socket.on('gameStarted', () => {
     document.getElementById('playerGameStatus').innerText = '게임 진행 중...';
     document.getElementById('resultsInfo').innerText = '게임 진행 중...';
+    startGameTimer();
 });
 
 function translateRole(role) {
@@ -139,7 +146,7 @@ function formatDate(date) {
 }
 
 function updateGameStatus(players) {
-    const gameStatusElement = document.getElementById('gameStatus');
+    const gameStatusElement = document.getElementById('playerGameStatus');
     if (gameStartTime) {
         const formattedTime = formatDate(gameStartTime);
         gameStatusElement.innerText = `게임 시작 시간: ${formattedTime}\n현재 플레이어: ${players.join(', ')}`;
@@ -160,6 +167,17 @@ function updateHostButtonState() {
     } else {
         startGameButton.disabled = false;
     }
+}
+
+function startGameTimer() {
+    clearInterval(gameInterval);
+    gameInterval = setInterval(() => {
+        const now = new Date();
+        const elapsed = new Date(now - gameStartTime);
+        const minutes = String(elapsed.getMinutes()).padStart(2, '0');
+        const seconds = String(elapsed.getSeconds()).padStart(2, '0');
+        document.getElementById('playerGameStatus').innerText = `현재 ${minutes}분 ${seconds}초 동안 게임이 진행 중입니다.`;
+    }, 1000);
 }
 
 // Tab functionality
