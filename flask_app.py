@@ -69,8 +69,8 @@ def handle_get_results(data):
     if not assigned_roles:
         emit('resultsInfo', {})
     else:
-        players = [{'name': player, 'role': role} for player, role in assigned_roles.items()]
-        emit('resultsInfo', {'players': players, 'winner': data['winner']}, broadcast=True)
+        players_roles = [{'name': player, 'role': role} for player, role in assigned_roles.items()]
+        emit('resultsInfo', {'players_roles': players_roles, 'winner': data['winner']}, broadcast=True)
 
 @socketio.on('connect')
 def handle_connect():

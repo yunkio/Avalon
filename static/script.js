@@ -98,8 +98,18 @@ socket.on('resultsInfo', (data) => {
     }
 
     const winner = data.winner;
-    const goodPlayers = data.players.filter(player => ['Merlin', 'Percival', 'Citizen'].includes(player.role)).map(player => player.name);
-    const evilPlayers = data.players.filter(player => ['Assassin', 'Minion', 'Morgana', 'Mordred', 'Oberon'].includes(player.role)).map(player => player.name);
+    const playersRoles = data.players_roles;
+    const resultsElement = document.getElementById('resultsInfo');
+    resultsElement.innerHTML = '';
+
+    playersRoles.forEach(playerRole => {
+        const playerRoleElement = document.createElement('div');
+        playerRoleElement.innerText = `${playerRole.name} : ${translateRole(playerRole.role)}`;
+        resultsElement.appendChild(playerRoleElement);
+    });
+
+    const goodPlayers = playersRoles.filter(player => ['Merlin', 'Percival', 'Citizen'].includes(player.role)).map(player => player.name);
+    const evilPlayers = playersRoles.filter(player => ['Assassin', 'Minion', 'Morgana', 'Mordred', 'Oberon'].includes(player.role)).map(player => player.name);
 
     const formattedGoodPlayers = goodPlayers.map(name => `<span class="good${winner === 'good' ? ' bold' : ''}">${name}</span>`).join(', ');
     const formattedEvilPlayers = evilPlayers.map(name => `<span class="evil${winner === 'evil' ? ' bold' : ''}">${name}</span>`).join(', ');
@@ -143,7 +153,7 @@ function translateRole(role) {
         'Mordred': '모드레드',
         'Oberon': '오베론'
     };
-    return roleTranslations.get(role, role);
+    return roleTranslations[role];
 }
 
 function formatDate(date) {
