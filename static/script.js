@@ -1,7 +1,6 @@
 const socket = io();
 
 let gameStartTime = null;
-let previousGames = [];
 let gameInterval = null;
 
 document.getElementById('startGame').addEventListener('click', () => {
@@ -74,8 +73,8 @@ socket.on('gameReset', () => {
     document.getElementById('playerName').value = '';
     document.getElementById('resultsInfo').innerText = '진행 중인 게임이 없습니다.';
     document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
+    gameStartTime = null;
     updateGameStatus([]);
-    updateHostButtonState();
 });
 
 socket.on('resultsInfo', (data) => {
@@ -96,20 +95,17 @@ socket.on('resultsInfo', (data) => {
 
     const formattedTime = formatDate(gameStartTime);
     const resultsText = `${formattedTime} : ${formattedGoodPlayers}, ${formattedEvilPlayers}`;
-    previousGames.push(resultsText);
 
-    updatePreviousGames();
-    gameStartTime = null;
+    document.getElementById('resultsInfo').innerHTML = resultsText;
     clearInterval(gameInterval);
+    gameStartTime = null;
     document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
     document.getElementById('roleInfo').innerText = '게임이 종료되었습니다.';
-    updateHostButtonState();
 });
 
 socket.on('gameStarted', () => {
     document.getElementById('playerGameStatus').innerText = '게임 진행 중...';
     document.getElementById('resultsInfo').innerText = '게임 진행 중...';
-    startGameTimer();
 });
 
 socket.on('updateGameStatus', (data) => {
@@ -153,20 +149,6 @@ function updateGameStatus(players) {
         gameStatusElement.innerText = `현재 ${minutes}분 ${seconds}초 동안 게임이 진행 중입니다.\n현재 플레이어: ${players.join(', ')}`;
     } else {
         gameStatusElement.innerText = '진행 중인 게임이 없습니다.';
-    }
-}
-
-function updatePreviousGames() {
-    const previousGamesElement = document.getElementById('previousGames');
-    previousGamesElement.innerHTML = previousGames.map(game => `<li>${game}</li>`).join('');
-}
-
-function updateHostButtonState() {
-    const startGameButton = document.getElementById('startGame');
-    if (gameStartTime) {
-        startGameButton.disabled = true;
-    } else {
-        startGameButton.disabled = false;
     }
 }
 
