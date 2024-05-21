@@ -132,3 +132,14 @@ body {
 .info .bold {
     font-weight: bold;
 }
+
+#roleCheckHistory {
+    list-style-type: none;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#roleCheckHistory li {
+    margin: 5px 0;
+}

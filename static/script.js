@@ -3,6 +3,7 @@ const socket = io();
 let gameStartTime = null;
 let previousGames = [];
 let gameInterval = null;
+let roleCheckHistory = [];
 
 document.getElementById('startGame').addEventListener('click', () => {
     const password = document.getElementById('hostPassword').value.trim();
@@ -67,6 +68,11 @@ socket.on('roleInfo', (data) => {
     roleInfoContainer.appendChild(infoElement);
 });
 
+socket.on('updateRoleCheckHistory', (data) => {
+    roleCheckHistory = data;
+    updateRoleCheckHistory();
+});
+
 socket.on('gameReset', () => {
     clearInterval(gameInterval);
     document.getElementById('roleInfo').innerText = '';
@@ -75,6 +81,8 @@ socket.on('gameReset', () => {
     document.getElementById('resultsInfo').innerText = '진행 중인 게임이 없습니다.';
     document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
     document.getElementById('resultsGameStatus').innerText = '진행 중인 게임이 없습니다.';
+    roleCheckHistory = [];
+    updateRoleCheckHistory();
     updateGameStatus([]);
     updateHostButtonState();
 });
@@ -168,6 +176,11 @@ function getGameStatusText(players) {
 function updatePreviousGames() {
     const previousGamesElement = document.getElementById('previousGames');
     previousGamesElement.innerHTML = previousGames.map(game => `<li>${game}</li>`).join('');
+}
+
+function updateRoleCheckHistory() {
+    const roleCheckHistoryElement = document.getElementById('roleCheckHistory');
+    roleCheckHistoryElement.innerHTML = roleCheckHistory.map(record => `<li>${record}</li>`).join('');
 }
 
 function updateHostButtonState() {

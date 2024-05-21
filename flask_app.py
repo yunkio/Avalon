@@ -12,6 +12,7 @@ assigned_roles = {}
 roles_count = {}
 game_start_time = None
 previous_games = []
+role_check_history = []
 
 @app.route('/')
 def index():
@@ -19,13 +20,15 @@ def index():
 
 @socketio.on('setGame')
 def handle_set_game(data):
-    global players, assigned_roles, roles_count, game_start_time
+    global players, assigned_roles, roles_count, game_start_time, role_check_history
     players = data['players']
     roles_count = data['roles']
     assigned_roles = assign_roles(players, roles_count)
     game_start_time = datetime.now()
+    role_check_history = []
     emit('gameStarted', broadcast=True)
     emit('updateGameStatus', {'players': players, 'game_start_time': game_start_time.isoformat()}, broadcast=True)
+    emit('updateRoleCheckHistory', role_check_history, broadcast=True)
 
 @socketio.on('getRole')
 def handle_get_role(data):
@@ -33,13 +36,18 @@ def handle_get_role(data):
     if player_name in assigned_roles:
         role = assigned_roles[player_name]
         info = get_role_info(role, assigned_roles, player_name)
+        timestamp = datetime.now().strftime('%H:%M:%S')
+        role_check_history.insert(0, f"[{timestamp}] {player_name}님이 역할을 확인하였습니다.")
+        if len(role_check_history) > 10:
+            role_check_history.pop()
         emit('roleInfo', {'role': translate_role(role), 'info': info})
+        emit('updateRoleCheckHistory', role_check_history, broadcast=True)
     else:
         emit('roleInfo', {'role': None, 'info': '플레이어를 찾을 수 없습니다'})
 
 @socketio.on('resetGame')
 def handle_reset_game():
-    global players, assigned_roles, roles_count, game_start_time, previous_games
+    global players, assigned_roles, roles_count, game_start_time, previous_games, role_check_history
     if game_start_time and players:
         previous_games.append({
             'start_time': game_start_time,
@@ -49,8 +57,10 @@ def handle_reset_game():
     assigned_roles = {}
     roles_count = {}
     game_start_time = None
+    role_check_history = []
     emit('gameReset', broadcast=True)
     emit('updateGameStatus', {'players': [], 'game_start_time': None}, broadcast=True)
+    emit('updateRoleCheckHistory', role_check_history, broadcast=True)
 
 @socketio.on('getResults')
 def handle_get_results(data):
@@ -63,8 +73,9 @@ def handle_get_results(data):
 
 @socketio.on('connect')
 def handle_connect():
-    global players, game_start_time
+    global players, game_start_time, role_check_history
     emit('updateGameStatus', {'players': players, 'game_start_time': game_start_time.isoformat() if game_start_time else None})
+    emit('updateRoleCheckHistory', role_check_history)
 
 def assign_roles(players, roles_count):
     roles = []
