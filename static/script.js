@@ -4,6 +4,7 @@ let gameStartTime = null;
 let previousGames = [];
 let gameInterval = null;
 let roleCheckHistory = [];
+let keepAliveInterval = null;
 
 document.getElementById('startGame').addEventListener('click', () => {
     const password = document.getElementById('hostPassword').value.trim();
@@ -85,6 +86,7 @@ socket.on('gameReset', () => {
     updateRoleCheckHistory();
     updateGameStatus([]);
     updateHostButtonState();
+    clearInterval(keepAliveInterval);
 });
 
 socket.on('resultsInfo', (data) => {
@@ -94,6 +96,7 @@ socket.on('resultsInfo', (data) => {
         document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
         document.getElementById('resultsGameStatus').innerText = '진행 중인 게임이 없습니다.';
         document.getElementById('roleInfo').innerText = '게임이 종료되었습니다.';
+        clearInterval(keepAliveInterval);
         return;
     }
 
@@ -127,6 +130,7 @@ socket.on('resultsInfo', (data) => {
     document.getElementById('resultsGameStatus').innerText = '진행 중인 게임이 없습니다.';
     document.getElementById('roleInfo').innerText = '게임이 종료되었습니다.';
     updateHostButtonState();
+    clearInterval(keepAliveInterval);
 });
 
 socket.on('gameStarted', () => {
@@ -134,6 +138,7 @@ socket.on('gameStarted', () => {
     document.getElementById('resultsInfo').innerText = '게임 진행 중...';
     document.getElementById('resultsGameStatus').innerText = '게임 진행 중...';
     startGameTimer();
+    startKeepAlive();
 });
 
 socket.on('updateGameStatus', (data) => {
@@ -142,6 +147,7 @@ socket.on('updateGameStatus', (data) => {
     if (data.game_start_time) {
         startGameTimer(data.players);
     }
+    startKeepAlive();
 });
 
 function translateRole(role) {
@@ -211,6 +217,13 @@ function startGameTimer(players) {
         document.getElementById('playerGameStatus').innerText = gameStatusText;
         document.getElementById('resultsGameStatus').innerText = gameStatusText;
     }, 1000);
+}
+
+function startKeepAlive() {
+    clearInterval(keepAliveInterval);
+    keepAliveInterval = setInterval(() => {
+        socket.emit('ping');
+    }, 60000); // 1분마다 서버에 핑
 }
 
 // Tab functionality
