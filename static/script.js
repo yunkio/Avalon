@@ -222,8 +222,17 @@ function startGameTimer(players) {
 function startKeepAlive() {
     clearInterval(keepAliveInterval);
     keepAliveInterval = setInterval(() => {
-        socket.emit('ping');
-    }, 60000); // 1분마다 서버에 핑
+        fetch('/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log('Keep-alive request was successful');
+            })
+            .catch(error => {
+                console.error('There was a problem with the keep-alive request:', error);
+            });
+    }, 60000); // 1분마다 서버에 요청
 }
 
 // Tab functionality

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO, emit
 from datetime import datetime
 import random
@@ -18,6 +18,10 @@ role_check_history = []
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/ping', methods=['GET'])
+def ping():
+    return jsonify(status='alive'), 200
 
 @socketio.on('setGame')
 def handle_set_game(data):
