@@ -74,6 +74,7 @@ socket.on('gameReset', () => {
     document.getElementById('playerName').value = '';
     document.getElementById('resultsInfo').innerText = '진행 중인 게임이 없습니다.';
     document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
+    document.getElementById('resultsGameStatus').innerText = '진행 중인 게임이 없습니다.';
     updateGameStatus([]);
     updateHostButtonState();
 });
@@ -83,6 +84,7 @@ socket.on('resultsInfo', (data) => {
         clearInterval(gameInterval);
         document.getElementById('resultsInfo').innerText = '진행 중인 게임이 없습니다.';
         document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
+        document.getElementById('resultsGameStatus').innerText = '진행 중인 게임이 없습니다.';
         document.getElementById('roleInfo').innerText = '게임이 종료되었습니다.';
         return;
     }
@@ -102,6 +104,7 @@ socket.on('resultsInfo', (data) => {
     gameStartTime = null;
     clearInterval(gameInterval);
     document.getElementById('playerGameStatus').innerText = '진행 중인 게임이 없습니다.';
+    document.getElementById('resultsGameStatus').innerText = '진행 중인 게임이 없습니다.';
     document.getElementById('roleInfo').innerText = '게임이 종료되었습니다.';
     updateHostButtonState();
 });
@@ -109,6 +112,7 @@ socket.on('resultsInfo', (data) => {
 socket.on('gameStarted', () => {
     document.getElementById('playerGameStatus').innerText = '게임 진행 중...';
     document.getElementById('resultsInfo').innerText = '게임 진행 중...';
+    document.getElementById('resultsGameStatus').innerText = '게임 진행 중...';
     startGameTimer();
 });
 
@@ -144,15 +148,20 @@ function formatDate(date) {
 }
 
 function updateGameStatus(players) {
-    const gameStatusElement = document.getElementById('playerGameStatus');
+    const gameStatusText = getGameStatusText(players);
+    document.getElementById('playerGameStatus').innerText = gameStatusText;
+    document.getElementById('resultsGameStatus').innerText = gameStatusText;
+}
+
+function getGameStatusText(players) {
     if (gameStartTime) {
         const now = new Date();
         const elapsed = new Date(now - gameStartTime);
         const minutes = String(elapsed.getMinutes()).padStart(2, '0');
         const seconds = String(elapsed.getSeconds()).padStart(2, '0');
-        gameStatusElement.innerText = `현재 ${minutes}분 ${seconds}초 동안 게임이 진행 중입니다.\n현재 플레이어: ${players.join(', ')}`;
+        return `현재 ${minutes}분 ${seconds}초 동안 게임이 진행 중입니다.\n현재 플레이어: ${players.join(', ')}`;
     } else {
-        gameStatusElement.innerText = '진행 중인 게임이 없습니다.';
+        return '진행 중인 게임이 없습니다.';
     }
 }
 
@@ -173,11 +182,9 @@ function updateHostButtonState() {
 function startGameTimer() {
     clearInterval(gameInterval);
     gameInterval = setInterval(() => {
-        const now = new Date();
-        const elapsed = new Date(now - gameStartTime);
-        const minutes = String(elapsed.getMinutes()).padStart(2, '0');
-        const seconds = String(elapsed.getSeconds()).padStart(2, '0');
-        document.getElementById('playerGameStatus').innerText = `현재 ${minutes}분 ${seconds}초 동안 게임이 진행 중입니다.`;
+        const gameStatusText = getGameStatusText([]);
+        document.getElementById('playerGameStatus').innerText = gameStatusText;
+        document.getElementById('resultsGameStatus').innerText = gameStatusText;
     }, 1000);
 }
 
