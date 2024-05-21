@@ -117,7 +117,7 @@ socket.on('gameStarted', () => {
 });
 
 socket.on('updateGameStatus', (data) => {
-    gameStartTime = new Date(data.game_start_time);
+    gameStartTime = data.game_start_time ? new Date(data.game_start_time) : null;
     updateGameStatus(data.players);
     if (data.game_start_time) {
         startGameTimer();
