@@ -104,8 +104,8 @@ def translate_role(role):
 
 def get_role_info(role, assigned_roles, player_name):
     if role == 'Merlin':
-        # 모드레드를 제외한 악역 플레이어 리스트를 만듭니다.
-        bad_roles = [p for p, r in assigned_roles.items() if r in ['Assassin', 'Minion', 'Morgana'] and p != player_name]
+        # 오베론을 포함한 악역 플레이어 리스트를 만듭니다. 모드레드는 제외합니다.
+        bad_roles = [p for p, r in assigned_roles.items() if r in ['Assassin', 'Minion', 'Morgana', 'Oberon']]
         return f"당신은 모드레드를 제외한 이 악한 플레이어들을 알고 있습니다: {', '.join(bad_roles)}"
     elif role == 'Percival':
         merlin_morgana = [p for p, r in assigned_roles.items() if r in ['Merlin', 'Morgana']]
@@ -113,12 +113,13 @@ def get_role_info(role, assigned_roles, player_name):
     elif role == 'Citizen':
         return "당신은 평범한 시민입니다."
     elif role in ['Assassin', 'Minion', 'Morgana', 'Mordred']:
-        # 오베론을 제외한 다른 악역 플레이어들
+        # 오베론을 제외한 다른 악역 플레이어들을 반환합니다.
         bad_roles = [p for p, r in assigned_roles.items() if r in ['Assassin', 'Minion', 'Morgana', 'Mordred'] and p != player_name]
         return f"당신은 이 악한 플레이어들을 알고 있습니다: {', '.join(bad_roles)}"
     elif role == 'Oberon':
         return "당신은 다른 악한 플레이어들을 알지 못합니다."
     return ""
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
